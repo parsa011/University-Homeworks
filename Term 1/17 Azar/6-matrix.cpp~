@@ -1,8 +1,0 @@
-#include <iostream>
-
-using namespace std;
-
-int main()
-{
-  int matrix_a_row, matrix_a_col;
-}
