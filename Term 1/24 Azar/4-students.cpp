@@ -20,8 +20,8 @@ int main()
     scores[i] = n;
     names[i] = s;
   }
-  int bs_score = -1, bs_index = -1;
-  int ws_score = 21, ws_index = -1;
+  int bs_score = -1, bs_index = -1; // best student
+  int ws_score = 21, ws_index = -1; // worst student
   for (int i = 0; i < count; i++) {
     if (scores[i] > bs_score) {
       bs_index = i;
@@ -33,6 +33,6 @@ int main()
     }
   }
   cout << "Best Student Is : '" << names[bs_index] << "' With : " << scores[bs_index] << endl;
-  cout << "Worse Student Is : '" << names[ws_index] << "' With : " << scores[ws_index] << endl;
+  cout << "Worst Student Is : '" << names[ws_index] << "' With : " << scores[ws_index] << endl;
   return 0;
 }
