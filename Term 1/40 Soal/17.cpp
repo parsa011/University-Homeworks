@@ -51,14 +51,6 @@ void write_hundreds(int n)
   cout << numbers[n] << " hundreds ";
 }
 
-int nthdigit(int n, int x)
-{
-    while (--x) {
-        n /= 10;
-    }
-    return n % 10;
-}
-
 void convert(int n)
 {
   int len = decimal_len(n);

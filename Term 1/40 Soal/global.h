@@ -10,6 +10,9 @@
 #include <math.h>
 #include <Windows.h>
 
+/*
+  it can be a little dangerous , but not in our project i think :)))
+*/
 using namespace std;
 
 static bool file_exist(char *file_path)
@@ -82,6 +85,14 @@ static int decimal_len(long n)
     len++;
   }
   return len;
+}
+
+static int nthdigit(int n, int x)
+{
+  while (--x) {
+    n /= 10;
+  }
+  return n % 10;
 }
 
 
