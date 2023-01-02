@@ -11,10 +11,7 @@ int main()
   cout << endl;
   
   int scores[n];
-  string names[n];
-  string ids[n];
-
-  string temp_s;
+  string names[n], ids[n], temp_s;
 
   int i, j;
   
