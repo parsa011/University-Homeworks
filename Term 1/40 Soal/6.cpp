@@ -66,6 +66,11 @@ void get_bigint(bigint *buf)
 	} while(true);
 }
 
+/*
+  returns 1 if b is bigger
+  returns -1 if a is bigger
+  and 0 if both are equal
+*/
 int bigint_bigger(bigint *a, bigint *b)
 {
 #define RIGHT 1
@@ -114,9 +119,9 @@ void bigint_sub(bigint *a, bigint *b)
 	a->negative = b->negative = false;
 	int status = bigint_bigger(a, b);
 	b->negative = b_sign;
-	
 	bigger = status == 1 ? b : a;
 	smaller = status == -1 ? b : a;
+
 	bool dec = false;
 	string res = "";
 	int i = bigger->len - 1, j = smaller->len - 1, temp;
@@ -134,8 +139,8 @@ void bigint_sub(bigint *a, bigint *b)
 	}
 	reverse_string(res);
 	a->len = res.length();
-	free(a->val);
 	a->negative = bigger->negative;
+	free(a->val);
 	a->val = (int *)malloc(a->len * sizeof(int));
 	for (i = 0; i < res.length(); i++) {
 		a->val[i] = res[i] - '0';
