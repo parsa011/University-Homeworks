@@ -11,6 +11,7 @@ typedef struct {
 
 void bigint_sum(bigint *, bigint *);
 void bigint_sub(bigint *, bigint *);
+void bigint_mul(bigint *, bigint *);
 void get_bigint(bigint *);
 void print_bigint(bigint buf);
 
@@ -27,7 +28,7 @@ void bigint_print(bigint buf)
 /*
  gets a big int until reaches to max length and return length of given number
 */
-void get_bigint(bigint *buf)
+void bigint_get(bigint *buf)
 {
 	char ch;
 	int bufsize = BIGINT_SIZE;
@@ -102,14 +103,43 @@ int bigint_bigger(bigint *a, bigint *b)
 #undef EQUAL
 }
 
+void bigint_sum(bigint *a, bigint *b)
+{
+	if (a->negative != b->negative) {
+		bigint_sub(a, b);
+		return;
+	}
+	int new_len = max(a->len, b->len);
+	int buf[new_len];
+	int k = new_len - 1, temp;
+	int i = a->len - 1, j = b->len - 1;
+	int carry;
+	for (; i >= 0 || j >= 0;) {
+		int n1 = i >= 0 ? a->val[i--] : 0;
+		int n2 = j >= 0 ? b->val[j--] : 0;
+		temp = n1 + n2 + carry;
+		carry = temp / 10;
+		buf[k--] = temp % 10;
+	}
+	new_len = carry ? new_len + 1 : new_len;
+	free(a->val);
+	a->len = new_len;
+	a->val = (int *)malloc(new_len * sizeof(int));
+	i = j = 0;
+	if (carry) {
+		a->val[i++] = 1;
+	}
+	for (; i < new_len; i++)
+		a->val[i] = buf[j++];
+}
+
 void bigint_sub(bigint *a, bigint *b)
 {
 	if (!a->negative && !b->negative) {
 		bigint_sum(a, b);
 		return;
 	}
-	bigint *bigger;
-	bigint *smaller;
+	bigint *bigger, *smaller;
 	/*
 	  here we stored b sign , because we need to check which number is bigger
 	  set a and b sign to positive , then check , and after check restore b sign
@@ -147,42 +177,83 @@ void bigint_sub(bigint *a, bigint *b)
 	}
 }
 
-void bigint_sum(bigint *a, bigint *b)
+void bigint_copy_str(bigint *a, string str)
 {
-	if (a->negative != b->negative) {
-		bigint_sub(a, b);
-		return;
+	int len = str.length();
+	int i = 0;
+	if (str[i] == '-') {
+		len--;
+		i++;
 	}
-	int new_len = max(a->len, b->len);
-	int buf[new_len];
-	int k = new_len - 1, temp;
-	int i = a->len - 1, j = b->len - 1;
-	int carry;
-	for (; i >= 0 || j >= 0;) {
-		int n1 = i >= 0 ? a->val[i--] : 0;
-		int n2 = j >= 0 ? b->val[j--] : 0;
-		temp = n1 + n2 + carry;
-		carry = temp / 10;
-		buf[k--] = temp % 10;
+	a->len = len;
+	a->val = (int *)malloc(len * sizeof(int));
+	for (int j = 0; j < len; j++) {
+		a->val[j] = str[i++] - '0';
 	}
-	new_len = carry ? new_len + 1 : new_len;
-	free(a->val);
-	a->len = new_len;
-	a->val = (int *)malloc(new_len * sizeof(int));
-	i = j = 0;
-	if (carry) {
-		a->val[i++] = 1;
+}
+
+void bigint_copy(bigint *a, bigint *b)
+{
+	a->negative = b->negative;
+	a->len = b->len;
+	if (a->val)
+		free(a->val);
+	a->val = (int *)malloc(a->len * sizeof(int));
+	for (int i = 0; i < b->len; i++) {
+		a->val[i] = b->val[i];
 	}
-	for (; i < new_len; i++)
-		a->val[i] = buf[j++];
+}
+
+
+void bigint_mul(bigint *a, bigint *b)
+{
+	bool negative = a->negative || b->negative;
+	if (a->negative && b->negative)
+		negative = false;
+
+	bigint buf = INIT_BIGINT, res = INIT_BIGINT;
+	bigint *bigger, *smaller;
+
+	bool b_sign = b->negative;
+	a->negative = b->negative = false;
+	int status = bigint_bigger(a, b);
+	b->negative = b_sign;
+	bigger = status == 1 ? b : a;
+	smaller = status == -1 ? b : a;
+	string str("");
+	int i, j, carry, temp, zero_count = 0;
+	for (i = smaller->len - 1; i >= 0 ; i--) {
+		str = "";
+		carry = 0;
+		for (int k = 0; k < zero_count; k++)
+			str += "0";
+		for (j = bigger->len - 1; j >= 0; j--) {
+			int n1 = smaller->val[i];
+			int n2 = bigger->val[j];
+			temp = n1 * n2 + carry;
+			carry = temp / 10;
+			temp %= 10;
+			str += to_string(temp);
+		}
+		if (carry) {
+			str += to_string(carry);
+		}
+		zero_count++;
+		reverse_string(str);
+		bigint_copy_str(&res, str);
+		bigint_sum(&buf, &res);
+	}
+	bigint_copy(a, &buf);
+	a->negative = negative;
 }
 
 int main()
 {
 	bigint a = INIT_BIGINT, b = INIT_BIGINT;
-	get_bigint(&a);
-	get_bigint(&b);
-	bigint_sum(&a, &b);
+	bigint_get(&a);
+	bigint_get(&b);
+	//bigint_sum(&a, &b);
+	bigint_mul(&a, &b);
 	bigint_print(a);
 	return 0;
 }
