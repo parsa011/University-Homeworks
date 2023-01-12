@@ -6,12 +6,18 @@ typedef struct {
 	bool negative;
 } bigint;
 
+/*
+  code is tooooooooo dirty and needs to cleanup :))
+ */
+
 #define INIT_BIGINT {0, NULL, false}
 #define BIGINT_SIZE 10
 
 void bigint_sum(bigint *, bigint *);
 void bigint_sub(bigint *, bigint *);
 void bigint_mul(bigint *, bigint *);
+void bigint_copy_str(bigint *, string);
+void bigint_copy(bigint *, bigint *);
 void get_bigint(bigint *);
 void print_bigint(bigint buf);
 
