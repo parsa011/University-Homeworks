@@ -111,5 +111,10 @@ static void reverse_string(string &str)
 	}
 }
 
+static string char_to_str(char c)
+{
+	string str(1, c);
+	return str;
+}
 
 #endif

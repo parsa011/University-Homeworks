@@ -11,16 +11,17 @@ void get_chars(char buf[], int len)
 	}
 }
 
-void create_possible_combinations(char buf[], int len, int index, string bag)
+void create_possible_combinations(char buf[], int len, int index, int max, string bag)
 {
-	if (bag.length() > len)
+	if (bag.length() > max)
 		return;
-	cout << bag << '\t';
+	if (bag.length() == max)
+		cout << bag << '\t';
 	string temp;
 	for (int i  = index + 1; i < len; i++) {
 		temp = bag;
 		temp += buf[i];
-		create_possible_combinations(buf, len, i, temp);
+		create_possible_combinations(buf, len, i, max, temp);
 	}
 }
 
@@ -30,11 +31,15 @@ int main()
 	cout << "Chars Count : ";
 	cin >> len;
 
+	int max;
+	cout << "Enter Max Len for collections : ";
+	cin >> max;
+
 	char chars[len];
 	get_chars(chars, len);
 
 	for (int i = 0; i < len; i++) {
-		create_possible_combinations(chars, len, i, char_to_str(chars[i]));
+		create_possible_combinations(chars, len, i, max, char_to_str(chars[i]));
 	}
 	
 	return 0;
