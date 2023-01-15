@@ -32,8 +32,10 @@ int main()
 	cin >> len;
 
 	int max;
-	cout << "Enter Max Len for collections : ";
-	cin >> max;
+	do {
+		cout << "Enter Max Len for collections : ";
+		cin >> max;
+	} while (max > len);
 
 	char chars[len];
 	get_chars(chars, len);
