@@ -40,13 +40,13 @@ int main()
   for (i = 0; i < file_line - 1; i++) {
     for (j = 0; j < file_line - i - 1; j++) {
       if (scores[j] < scores[j + 1]) {
-	int temp = scores[j];
-	scores[j] = scores[j + 1];
-	scores[j + 1] = temp;
+		  int temp = scores[j];
+		  scores[j] = scores[j + 1];
+		  scores[j + 1] = temp;
 
-	names[j].swap(names[j + 1]);
+		  names[j].swap(names[j + 1]);
 
-	ids[j].swap(ids[j + 1]);
+		  ids[j].swap(ids[j + 1]);
       }
     }
   }

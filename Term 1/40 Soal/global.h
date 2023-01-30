@@ -38,6 +38,14 @@ static long file_line_count(fstream &file)
 	return count;
 }
 
+static void file_read_lines(fstream &file, string lines[], int count)
+{
+	string line;
+	int i = 0;
+	while (i < count && getline(file, line))
+		lines[i++] = line;
+}
+
 static void eat_until(string str, char ch, int &i)
 {
 	i = str.find(ch) + 1;
