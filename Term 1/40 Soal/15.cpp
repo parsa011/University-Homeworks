@@ -9,6 +9,7 @@ int main()
 	float max_price = 0;
 
 	while (units > 0) {
+		cout << units * price << endl;
 		if (units * price > target_unit * max_price) {
 			target_unit = units;
 			max_price = price;
